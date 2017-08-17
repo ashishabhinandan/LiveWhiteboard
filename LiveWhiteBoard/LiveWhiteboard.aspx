@@ -37,7 +37,7 @@
             </tr>
     </table>
 </div>
-
+    <div id="error" ></div>
     <div>
         <div class="leftside">
             <canvas id="sketchboard" width="400" height="400" ></canvas>
@@ -54,6 +54,8 @@
                 <img id="imgclear" src="Images/clear.jpg" title="clear canvas" onclick="erase()" />
                 <br />
                 <img id="imgshare" src="Images/share.jpg" title="Share" onclick="shareLink()" />
+                <br />
+                <img id="imgundo" src="Images/undo.png" title="Undo" onclick="undoSketch()" />
             </div>
             
         </div>

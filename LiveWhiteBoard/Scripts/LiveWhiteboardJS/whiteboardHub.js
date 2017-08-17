@@ -31,12 +31,24 @@ whiteboardHub.client.broadcastChatMessage = function (name, message) {
     objDiv.scrollTop = objDiv.scrollHeight;
 };
 
-
-
+whiteboardHub.client.broadcastUndoCanvas = function (message) {
+    var parsedUndoSketches = JSON.parse(message);
+    if (parsedUndoSketches.length > 0) {
+        parsedUndoSketches.forEach(function (item) { setDrawCordinates(item); })
+    } else {
+        alert("Either there is nothing to Undo or undo limit crossed !!!");
+    }
+    resetCanvasPen();
+};
 
 $(document).bind("clearCanvas", function (e) {
     whiteboardHub.server.clearCanvas($("#userName").val(), $("#groupName").val());
 });
+
+$(document).bind("undoSketch", function (e) {
+    whiteboardHub.server.undoCanvasSketch($("#userName").val(), $("#groupName").val());
+});
+
 
 $(document).bind("sendChatClicked", function (e) {
     if (e.message.length > 0) {
@@ -53,8 +65,8 @@ $(document).bind("JoinClicked", function (e) {
         $("#userName").val(name);
     }
     $.connection.hub.start().done(function () {
+        remvoeErrorMsg();
         // Call the server side function AFTER the connection has been started
-
 
         // whiteboardHub.server.drawSketchHistory(guestId); 
         whiteboardHub.server.joinGroup($("#groupName").val()).done(function () {
@@ -69,3 +81,19 @@ $(document).bind("JoinClicked", function (e) {
     })
 });
 
+var tryingToReconnect = false;
+
+$.connection.hub.reconnecting(function () {
+    tryingToReconnect = true;
+});
+
+$.connection.hub.reconnected(function () {
+    tryingToReconnect = false;
+});
+
+$.connection.hub.disconnected(function () {
+    if (tryingToReconnect) {
+        notifyError("hub disconnected !! trying to reconnect ...");
+        $.connection.hub.start();
+    }
+});

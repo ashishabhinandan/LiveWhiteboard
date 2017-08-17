@@ -124,6 +124,7 @@
     <Content Include="Images\clear.jpg" />
     <Content Include="Images\eraser.jpg" />
     <Content Include="Images\share.jpg" />
+    <Content Include="Images\undo.png" />
     <Content Include="Scripts\jquery-1.12.4.js" />
     <Content Include="Scripts\jquery-1.12.4.min.js" />
     <Content Include="Scripts\jquery-1.12.4.min.map" />
@@ -149,6 +150,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DrawSketchCommand.cs" />
+    <Compile Include="DropOutStack.cs" />
+    <Compile Include="ICommand.cs" />
     <Compile Include="LiveWhiteboard.aspx.cs">
       <DependentUpon>LiveWhiteboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

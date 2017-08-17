@@ -10,13 +10,25 @@ namespace LiveWhiteBoard
 {
     public class WhiteboardHub : Hub
     {
+        private static Dictionary<string, DrawSketchCommand> _groupWiseSketchCommand = new Dictionary<string, DrawSketchCommand>();
         public void JoinGroup(string groupName)
         {
-            Groups.Add(Context.ConnectionId, groupName);
+            try
+            {
+                if (!_groupWiseSketchCommand.ContainsKey(groupName))
+                {
+                    _groupWiseSketchCommand.Add(groupName, new DrawSketchCommand(new DropOutStack<SketchMetaData>(100)));
+                }
+                Groups.Add(Context.ConnectionId, groupName);
+            }
+            catch (Exception ee)
+            {
+                Console.WriteLine(ee.Message);
+            }
         }
         public void JoinChat(string name, string groupName)
         {
-            Clients.Group(groupName).ChatJoined(name);
+            Clients.Group(groupName).chatJoined(name);
         }
 
         public void PublishChatMesssage(string message, string name, string groupName)
@@ -26,8 +38,21 @@ namespace LiveWhiteBoard
 
         public void PublishDraw(SketchMetaData linecordinates, string name, string groupName)
         {
-            var returnData = JsonConvert.SerializeObject(linecordinates);
-            Clients.Group(groupName).broadcastSketch(returnData);
+            try
+            {
+                if (_groupWiseSketchCommand.ContainsKey(groupName))
+                {
+                    _groupWiseSketchCommand[groupName].sketch = linecordinates;
+                    _groupWiseSketchCommand[groupName].Do();
+                }
+
+                var returnData = JsonConvert.SerializeObject(linecordinates);
+                Clients.Group(groupName).broadcastSketch(returnData);
+            }
+            catch (Exception ee)
+            {
+                Console.WriteLine(ee.Message);
+            }
         }
 
         public void ClearCanvas(string name, string groupName)
@@ -35,6 +60,21 @@ namespace LiveWhiteBoard
             Clients.Group(groupName).clearCanvas();
         }
 
+        public void UndoCanvasSketch(string name, string groupName)
+        {
+            try
+            {
+                if (_groupWiseSketchCommand.ContainsKey(groupName))
+                {
+                    var returnData = JsonConvert.SerializeObject(_groupWiseSketchCommand[groupName].UnDo());
+                    Clients.Group(groupName).broadcastUndoCanvas(returnData);
+                }
+            }
+            catch (Exception ee)
+            {
+                Console.WriteLine(ee.Message);
+            }
+        }
 
     }
 }

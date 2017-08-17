@@ -1,0 +1,23 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace LiveWhiteBoard
+{
+    interface ICommand
+    {
+        void Do();
+        IList UnDo();
+    }
+
+    public enum DrawState
+    {
+        move,
+        down,
+        outside,
+        up        
+    }
+}

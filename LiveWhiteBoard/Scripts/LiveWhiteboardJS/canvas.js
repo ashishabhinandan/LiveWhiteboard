@@ -13,30 +13,19 @@ var applicationPath;
 var whiteboardHub;
 var sketchcanvas;
 
+var mouseMoveEnum = {
+    move: 0,
+    down: 1,
+    outside: 2,
+    up: 3
+};
+
 function init() {
 
-    $("#sketchboard").bind("mouseover", function () {
-        $(this).css('cursor', 'url(images/cross_hair.png),auto')
-    }).mouseout(function () {
-        $(this).css('cursor', 'auto');
-    });
-
+    controlMouseCursor();
     setGroupName();
-    
-
-    $("#userName").val("");
-    $("#dialog-form").dialog({
-        autoOpen: false, width: 350, modal: true, closeOnEscape: false,
-        open: function (event,ui) {
-            $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
-        }
-    });
-    $("#dialog-form").dialog("open");
-    $("#name").keypress(function (e) {
-        if (e && e.keyCode == 13) {
-            $("#btnJoin").click();
-        }
-    });
+    JoinUserToGroup();
+    remvoeErrorMsg();
 
     $("#btnJoin").click(function (e) {
         $.event.trigger({
@@ -57,6 +46,7 @@ function init() {
  );
 
     try {
+
         sketchcanvas = document.getElementById('sketchboard');
         w = sketchcanvas.width;
         h = sketchcanvas.height;
@@ -66,16 +56,16 @@ function init() {
 
         if (ctx) {
             sketchcanvas.addEventListener("mousemove", function (e) {
-                raiseEvent('move', e)
+                raiseEvent(mouseMoveEnum.move, e)
             }, false);
             sketchcanvas.addEventListener("mousedown", function (e) {
-                raiseEvent('down', e)
+                raiseEvent(mouseMoveEnum.down, e)
             }, false);
             sketchcanvas.addEventListener("mouseup", function (e) {
-                raiseEvent('up', e)
+                raiseEvent(mouseMoveEnum.up, e)
             }, false);
             sketchcanvas.addEventListener("mouseout", function (e) {
-                raiseEvent('out', e)
+                raiseEvent(mouseMoveEnum.outside, e)
             }, false);
         }
         else {
@@ -83,7 +73,7 @@ function init() {
         }
     }
     catch (err) {
-        alert(err.message);
+        notifyError(err);
     }
 }
 
@@ -128,6 +118,7 @@ function draw() {
 }
 
 function raiseEvent(mouseState, e) {
+    // raise only if mouse button pressed
     if (e.buttons > 0) {
         $.event.trigger({
             type: "drawSketch",
@@ -147,13 +138,18 @@ function erase() {
     }
 }
 
+function undoSketch() {
+    $.event.trigger({
+        type: "undoSketch"
+    });
+}
 
 
 function setDrawCordinates(parsedSketchData, isHistory) {
     sketchColor = parsedSketchData.color;
     sketchWidth = parsedSketchData.width;
 
-    if (parsedSketchData.drawState == 'down') {
+    if (parsedSketchData.drawState == mouseMoveEnum.down) {
         prevX = currX;
         prevY = currY;
         currX = parsedSketchData.currX - sketchcanvas.offsetLeft;
@@ -170,10 +166,10 @@ function setDrawCordinates(parsedSketchData, isHistory) {
             dot_flag = false;
         }
     }
-    if (parsedSketchData.drawState == 'up' || parsedSketchData.drawState == "out") {
+    if (parsedSketchData.drawState == mouseMoveEnum.up || parsedSketchData.drawState == mouseMoveEnum.outside) {
         flag = false;
     }
-    if (parsedSketchData.drawState == 'move') {
+    if (parsedSketchData.drawState == mouseMoveEnum.move) {
         if (flag || isHistory) {
             console.log("move");
             prevX = currX;
@@ -184,6 +180,35 @@ function setDrawCordinates(parsedSketchData, isHistory) {
 
         }
     }
+}
+
+function resetCanvasPen() {
+    sketchColor = "black";
+    sketchWidth = 2;
+}
+
+function controlMouseCursor() {
+    $("#sketchboard").bind("mouseover", function () {
+        $(this).css('cursor', 'url(images/cross_hair.png),auto')
+    }).mouseout(function () {
+        $(this).css('cursor', 'auto');
+    });
+}
+
+function JoinUserToGroup() {
+    $("#userName").val("");
+    $("#dialog-form").dialog({
+        autoOpen: false, width: 350, modal: true, closeOnEscape: false,
+        open: function (event, ui) {
+            $(".ui-dialog-titlebar-close", ui.dialog | ui).hide();
+        }
+    });
+    $("#dialog-form").dialog("open");
+    $("#name").keypress(function (e) {
+        if (e && e.keyCode == 13) {
+            $("#btnJoin").click();
+        }
+    });
 }
 
 function GetParameterValues(param) {
@@ -223,5 +248,16 @@ function shareLink() {
     $("#sharedurl").attr('href', shareurl).text(shareurl);
     $("#divShare").removeAttr("hidden");
 }
+
+function notifyError(msg) {
+    $('#error').html(msg);
+    $("#error").addClass("error");
+}
+
+function remvoeErrorMsg() {
+    $('#error').html("");
+    $("#error").removeClass("error");
+}
+
 
 
