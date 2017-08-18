@@ -49,6 +49,7 @@
                 <div class="color-box" style="background:yellow;" id="yellow" onclick="color(this)"></div>
                 <div class="color-box" style="background:orange;" id="orange" onclick="color(this)"></div>
                 <div class="color-box" style="background:black;" id="black" onclick="color(this)"></div>
+                <div class="tools">
                 <div>Tools</div>
                 <div id="white" onclick="color(this)"><img id="imgeraser" src="Images/eraser.jpg" title="erase" /></div>
                 <img id="imgclear" src="Images/clear.jpg" title="clear canvas" onclick="erase()" />
@@ -56,6 +57,7 @@
                 <img id="imgshare" src="Images/share.jpg" title="Share" onclick="shareLink()" />
                 <br />
                 <img id="imgundo" src="Images/undo.png" title="Undo" onclick="undoSketch()" />
+                </div>
             </div>
             
         </div>

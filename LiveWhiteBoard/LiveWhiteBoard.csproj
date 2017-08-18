@@ -150,9 +150,9 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DrawSketchCommand.cs" />
-    <Compile Include="DropOutStack.cs" />
-    <Compile Include="ICommand.cs" />
+    <Compile Include="CanvasSketch\DrawSketchCommand.cs" />
+    <Compile Include="CanvasSketch\DropOutStack.cs" />
+    <Compile Include="Interface\ICommand.cs" />
     <Compile Include="LiveWhiteboard.aspx.cs">
       <DependentUpon>LiveWhiteboard.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -160,7 +160,7 @@
     <Compile Include="LiveWhiteboard.aspx.designer.cs">
       <DependentUpon>LiveWhiteboard.aspx</DependentUpon>
     </Compile>
-    <Compile Include="WhiteboardHub.cs" />
+    <Compile Include="CanvasSketch\WhiteboardHub.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

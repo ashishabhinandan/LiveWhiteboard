@@ -5,6 +5,8 @@ using System.Web;
 
 namespace LiveWhiteBoard
 {
+    // Custom Stack implementation
+    // once item reached to maximum capacity , new push will delete oldest item 
     public class DropOutStack<T>
     {
         private T[] items;

@@ -11,16 +11,21 @@ body
 	{
 		float:left;
 		width:15%;
+        border:1px solid #000
+
 	}
         .leftside .color-pallette img
         {
             width:30px
         }
+        .leftside .color-pallette .tools
+        {
+            margin-left:20px;
+        }
 	.leftside canvas
 	{
 		
-		border:1px solid #000;
-		
+			margin-left:20px;
             border: 1px solid #888;
             border-radius: 4px;
             position: relative;
@@ -30,7 +35,9 @@ body
 		width:20px;
 		height:20px;
 		margin-bottom:10px;
-		border:1px solid #666
+		border:1px solid #666;
+        margin-left:20px;
+        
 	}
  .rightside{
      float:right;
