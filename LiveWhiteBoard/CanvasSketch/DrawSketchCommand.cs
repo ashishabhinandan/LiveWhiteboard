@@ -23,7 +23,7 @@ namespace LiveWhiteBoard
             _stackSketchHistory.Push(sketch);
         }
 
-        public IList UnDo()
+        public IEnumerable UnDo()
         {
             DrawState currSketchDrawState;
             IList<SketchMetaData> undoList = new List<SketchMetaData>();

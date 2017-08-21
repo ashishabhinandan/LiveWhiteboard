@@ -10,7 +10,7 @@ namespace LiveWhiteBoard
     interface ICommand
     {
         void Do();
-        IList UnDo();
+        IEnumerable UnDo();
     }
 
     public enum DrawState
