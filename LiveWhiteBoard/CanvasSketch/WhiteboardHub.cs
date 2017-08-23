@@ -5,19 +5,21 @@ using System.Web;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
 using LiveWhiteBoard.Models;
+using System.Configuration;
 
 namespace LiveWhiteBoard
 {
     public class WhiteboardHub : Hub
     {
         private static Dictionary<string, DrawSketchCommand> _groupWiseSketchCommand = new Dictionary<string, DrawSketchCommand>();
+        int capacity = Convert.ToInt32(ConfigurationManager.AppSettings["RollOutstackCapacity"]);
         public void JoinGroup(string groupName)
         {
             try
             {
                 if (!_groupWiseSketchCommand.ContainsKey(groupName))
                 {
-                    _groupWiseSketchCommand.Add(groupName, new DrawSketchCommand(new DropOutStack<SketchMetaData>(100)));
+                    _groupWiseSketchCommand.Add(groupName, new DrawSketchCommand(new DropOutStack<SketchMetaData>(capacity)));
                 }
                 Groups.Add(Context.ConnectionId, groupName);
             }
